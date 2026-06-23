@@ -1,18 +1,19 @@
+import React, { useState } from 'react';
 import './App.scss';
 import { TodoList } from './components/TodoList/TodoList';
 import { Todo } from './types/todo';
 import usersFromServer from './api/users';
 import todosFromServer from './api/todos';
-import { useState } from 'react';
 
 export const App = () => {
+  const users = usersFromServer;
+
   const initialTodos = todosFromServer.map(todo => ({
     ...todo,
-    user: usersFromServer.find(user => user.id === todo.userId) || null,
+    user: users.find(user => user.id === todo.userId) || null,
   }));
 
   const [todos, setTodos] = useState(initialTodos);
-  const [users] = useState(usersFromServer);
   const [title, setTitle] = useState('');
   const [userId, setUserId] = useState(0);
   const [titleError, setTitleError] = useState(false);
@@ -56,7 +57,9 @@ export const App = () => {
 
       <form onSubmit={handleSubmit}>
         <div className="field">
+          <label htmlFor="titleInput">Title: </label>
           <input
+            id="titleInput"
             type="text"
             data-cy="titleInput"
             placeholder="Enter a title"
@@ -70,7 +73,9 @@ export const App = () => {
         </div>
 
         <div className="field">
+          <label htmlFor="userSelect">User: </label>
           <select
+            id="userSelect"
             data-cy="userSelect"
             value={userId}
             onChange={event => {
